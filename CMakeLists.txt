@@ -40,3 +40,4 @@ link_libraries (${TIFF_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES})
 set_property(SOURCE iio.c PROPERTY COMPILE_FLAGS "-Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign -Wno-parentheses -Wno-deprecated-declarations -Wno-unused-function")
 
 add_executable(readRGB readRGB.c iio.c iio.h)
+add_executable(num_pixels num_pixels.c iio.c iio.h utils.c utils.h)
