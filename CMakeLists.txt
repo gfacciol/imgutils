@@ -44,3 +44,4 @@ set_property(SOURCE iio.c PROPERTY COMPILE_FLAGS "-Wno-unused-variable -Wno-unus
 add_executable(readRGB readRGB.c iio.c iio.h)
 add_executable(num_pixels num_pixels.c iio.c iio.h utils.c utils.h)
 add_executable(dct dct.c iio.c iio.h utils.c utils.h)
+add_executable(anti_dead_pixel anti_dead_pixel.c iio.c iio.h utils.c utils.h)
