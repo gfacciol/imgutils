@@ -25,10 +25,17 @@ else ()
   set (CMAKE_C_STANDARD 99)
 endif ()
 
+# Enable C++11
+if (CMAKE_VERSION VERSION_LESS "3.1")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+else ()
+  set (CMAKE_CXX_STANDARD 11)
+endif ()
+
 # Enable OpenMP
-#find_package (OpenMP REQUIRED)
-#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-#set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+find_package (OpenMP REQUIRED)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 
 # Link LibTIFF, LibJPEG, LibPNG, OpenMP
 find_package (TIFF REQUIRED)
@@ -41,7 +48,8 @@ link_libraries (${TIFF_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES} ${FFTWF_LIB
 
 set_property(SOURCE iio.c PROPERTY COMPILE_FLAGS "-Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign -Wno-parentheses -Wno-deprecated-declarations -Wno-unused-function")
 
-add_executable(readRGB readRGB.c iio.c iio.h)
-add_executable(num_pixels num_pixels.c iio.c iio.h utils.c utils.h)
-add_executable(dct dct.c iio.c iio.h utils.c utils.h)
-add_executable(anti_dead_pixel anti_dead_pixel.c iio.c iio.h utils.c utils.h)
+add_library(imgutils OBJECT iio.c iio.h utils.cpp utils.hpp Image.hpp)
+add_executable(readRGB readRGB.cpp $<TARGET_OBJECTS:imgutils>)
+add_executable(num_pixels num_pixels.cpp $<TARGET_OBJECTS:imgutils>)
+add_executable(dct dct.cpp $<TARGET_OBJECTS:imgutils>)
+add_executable(anti_dead_pixel anti_dead_pixel.cpp $<TARGET_OBJECTS:imgutils>)
