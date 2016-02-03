@@ -37,7 +37,7 @@ find_package (OpenMP REQUIRED)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 
-# Link LibTIFF, LibJPEG, LibPNG, OpenMP
+# Link LibTIFF, LibJPEG, LibPNG, LibFFTW
 find_package (TIFF REQUIRED)
 find_package (JPEG REQUIRED)
 find_package (PNG REQUIRED)
@@ -54,3 +54,4 @@ add_executable(num_pixels num_pixels.cpp $<TARGET_OBJECTS:imgutils>)
 add_executable(dct dct.cpp $<TARGET_OBJECTS:imgutils>)
 add_executable(anti_dead_pixel anti_dead_pixel.cpp $<TARGET_OBJECTS:imgutils>)
 add_executable(4to3 4to3.cpp $<TARGET_OBJECTS:imgutils>)
+add_executable(vst vst.cpp $<TARGET_OBJECTS:imgutils>)

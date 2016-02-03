@@ -38,6 +38,10 @@ class Image {
   int rows() const { return rows_; }
   float* data() { return data_.data(); }
   const float* data() const { return data_.data(); }
+  std::vector<float>::iterator begin() { return data_.begin(); }
+  std::vector<float>::const_iterator begin() const { return data_.begin(); }
+  std::vector<float>::iterator end() { return data_.end(); }
+  std::vector<float>::const_iterator end() const { return data_.end(); }
 
  protected:
   int rows_{0};
