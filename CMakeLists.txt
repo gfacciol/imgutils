@@ -49,9 +49,6 @@ link_libraries (${TIFF_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES} ${FFTWF_LIB
 set_property(SOURCE iio.c PROPERTY COMPILE_FLAGS "-Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign -Wno-parentheses -Wno-deprecated-declarations -Wno-unused-function")
 
 add_library(imgutils OBJECT iio.c iio.h utils.cpp utils.hpp Image.hpp)
-add_executable(readRGB readRGB.cpp $<TARGET_OBJECTS:imgutils>)
-add_executable(num_pixels num_pixels.cpp $<TARGET_OBJECTS:imgutils>)
-add_executable(dct dct.cpp $<TARGET_OBJECTS:imgutils>)
-add_executable(anti_dead_pixel anti_dead_pixel.cpp $<TARGET_OBJECTS:imgutils>)
-add_executable(4to3 4to3.cpp $<TARGET_OBJECTS:imgutils>)
-add_executable(vst vst.cpp $<TARGET_OBJECTS:imgutils>)
+foreach(program readRGB num_pixels dct anti_dead_pixel 4to3 vst apply_histogram)
+  add_executable(${program} ${program}.cpp $<TARGET_OBJECTS:imgutils>)
+endforeach(program)
