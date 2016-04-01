@@ -30,7 +30,7 @@ const char *pick_option(int *c, char **v, const char *o, const char *d) {
   return d;
 }
 
-Image read_image(const string& filename) {
+Image read_image(const string &filename) {
   int w, h, c;
   float *data = iio_read_image_float_vec(filename.c_str(), &w, &h, &c);
   Image im(data, h, w, c);
@@ -38,10 +38,36 @@ Image read_image(const string& filename) {
   return im;
 }
 
-void save_image(const Image& image, const std::string& filename) {
-  iio_save_image_float_vec(const_cast<char*>(filename.c_str()),
-                           const_cast<float*>(image.data()),
-                           image.columns(), image.rows(), image.channels());
+void save_image(const Image &image, const std::string &filename) {
+  iio_save_image_float_vec(const_cast<char *>(filename.c_str()),
+                           const_cast<float *>(image.data()),
+                           image.columns(),
+                           image.rows(),
+                           image.channels());
+}
+
+inline int SymmetricCoordinate(int pos, int size) {
+  if (pos < 0) pos = -pos - 1;
+  if (pos >= 2 * size) pos %= 2 * size;
+  if (pos >= size) pos = 2 * size - 1 - pos;
+  return pos;
+}
+
+Image pad_symmetric(const Image &src, int padding) {
+  Image result(src.rows() + 2 * padding,
+               src.columns() + 2 * padding,
+               src.channels());
+  for (int row = 0; row < result.rows(); ++row) {
+    for (int col = 0; col < result.columns(); ++col) {
+      for (int chan = 0; chan < result.channels(); ++chan) {
+        result.val(col, row, chan) =
+            src.val(SymmetricCoordinate(col - padding, src.columns()),
+                    SymmetricCoordinate(row - padding, src.rows()),
+                    chan);
+      }
+    }
+  }
+  return result;
 }
 
 }

@@ -14,6 +14,7 @@ const char *pick_option(int *c, char **v, const char *o, const char *d);
 Image read_image(const std::string& filename);
 void save_image(const Image& image, const std::string& filename);
 
+Image pad_symmetric(const Image &src, int padding);
 }
 
 #endif //IMGUTILS_UTILS_H
