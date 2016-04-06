@@ -20,14 +20,14 @@ endif ()
 
 # Enable C99
 if (CMAKE_VERSION VERSION_LESS "3.1")
-  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 else ()
   set (CMAKE_C_STANDARD 99)
 endif ()
 
 # Enable C++11
 if (CMAKE_VERSION VERSION_LESS "3.1")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 else ()
   set (CMAKE_CXX_STANDARD 11)
 endif ()
@@ -59,6 +59,6 @@ set_property(SOURCE iio.c PROPERTY COMPILE_FLAGS "-Wno-unused-variable -Wno-unus
 set_property(SOURCE smooth_detector.cpp PROPERTY COMPILE_FLAGS "-Wno-deprecated-declarations")
 
 add_library(imgutils OBJECT iio.c iio.h utils.cpp utils.hpp Image.hpp EigenImage.hpp)
-foreach(program readRGB num_pixels dct anti_dead_pixel 4to3 vst apply_histogram cfa_split cfa_rebuild cfa_colorize smooth_detector)
+foreach(program readRGB num_pixels dct anti_dead_pixel 4to3 vst apply_histogram cfa_split cfa_rebuild cfa_colorize smooth_detector fpsnr)
   add_executable(${program} ${program}.cpp $<TARGET_OBJECTS:imgutils>)
 endforeach(program)
