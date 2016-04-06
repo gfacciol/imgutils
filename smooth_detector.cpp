@@ -68,8 +68,8 @@ Image ExtractPatch(const Image& source, int r, int pr, int pc, int ch) {
 
 Image smooth_detector(const Image& source, Interpolation level, int r) {
   Image output(source.rows(), source.columns(), 1, numeric_limits<float>::max());
-  MatrixXf reg_matrix = ComputeRegMatrix(level, r);
-  LDLT<MatrixXf> solver = (reg_matrix.transpose() * reg_matrix).ldlt();
+  const MatrixXf reg_matrix = ComputeRegMatrix(level, r);
+  const LDLT<MatrixXf> solver = (reg_matrix.transpose() * reg_matrix).ldlt();
   for (int pr = 0; pr <= source.rows() - r; ++pr) {
     for (int pc = 0; pc <= source.columns() - r; ++pc) {
       VectorXf dist = VectorXf::Zero(r * r);
@@ -92,7 +92,7 @@ Image smooth_detector(const Image& source, Interpolation level, int r) {
 int main(int argc, char *argv[]) {
   bool usage = pick_option(&argc, argv, "h", nullptr);
   int level = atoi(pick_option(&argc, argv, "l", "1"));
-  int r = atoi(pick_option(&argc, argv, "r", "15"));
+  int r = atoi(pick_option(&argc, argv, "r", "16"));
   if (usage) {
     cerr << "usage: " << argv[0] << " [input [output]] [-l level] [-r r]" << endl;
     return EXIT_SUCCESS;
