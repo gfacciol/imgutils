@@ -1,39 +1,27 @@
-/*
- * IioImage.h
- *
- *  Created on: 10/feb/2015
- *      Author: nicola
- */
+//
+// Created by Nicola Pierazzo on 18/04/16.
+//
 
-#ifndef EIGENIMAGE_H_
-#define EIGENIMAGE_H_
+#ifndef EIGENIMAGE_HPP_
+#define EIGENIMAGE_HPP_
 
-#include "Image.hpp"
 #include <Eigen/Core>
+#include <utility>
+#include "Image.hpp"
 
 namespace imgutils {
 
 class EigenImage : public Image {
  public:
-  EigenImage(int rows, int columns, int channels = 1);
-
-  EigenImage(const EigenImage &) = delete;
-  EigenImage &operator=(const EigenImage &) = delete;
-
-  EigenImage(EigenImage &&) = default;
-  EigenImage &operator=(EigenImage &&) = default;
-
-  EigenImage(Image &&from) : Image(std::move(from)), vecmap_(data(), samples()) {};
-
+  using Image::Image;
+  EigenImage(Image&& src) : Image(std::move(src)) {};
   Eigen::Map<Eigen::VectorXf> asvector() const { return vecmap_; };
+  Eigen::Map<Eigen::VectorXf> asvector() { return vecmap_; };
 
  private:
-  Eigen::Map<Eigen::VectorXf> vecmap_;
+  Eigen::Map<Eigen::VectorXf> vecmap_{data(), samples()};
 };
 
-inline EigenImage::EigenImage(int rows, int columns, int channels)
-    : Image(rows, columns, channels), vecmap_(data(), samples()) {}
+}  // namespace imgutils
 
-} /* namespace imgutils */
-
-#endif /* EIGENIMAGE_H_ */
+#endif  // EIGENIMAGE_HPP_

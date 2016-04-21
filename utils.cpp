@@ -38,7 +38,7 @@ Image read_image(const string &filename) {
   return im;
 }
 
-void save_image(const Image &image, const std::string &filename) {
+void save_image(const Image &image, const string &filename) {
   iio_save_image_float_vec(const_cast<char *>(filename.c_str()),
                            const_cast<float *>(image.data()),
                            image.columns(),
