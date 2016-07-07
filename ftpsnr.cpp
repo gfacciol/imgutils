@@ -2,10 +2,10 @@
 // Created by Nicola Pierazzo on 01/04/16.
 //
 
-#include <iostream>
 #include <cmath>
 #include <utility>
 #include <tuple>
+#include <iostream>
 #include "Image.hpp"
 #include "utils.hpp"
 
@@ -18,49 +18,42 @@ using std::pair;
 using std::tie;
 using std::max;
 using std::min;
+using std::log10;
 
 // flat patches count "weight", while other patches count 1
-tuple<double, double, double> compute_ftrmse(const Image& mask,
+tuple<double, double, double> compute_ftmse(const Image& mask,
                                              const Image& in1,
                                              const Image& in2,
                                              float t1, float t2) {
-  pair <double, double> flat = {0., 0.}, texture = {0., 0.};
-  double mse = 0.;
+  double fsum = 0., fw = 0., tsum = 0., tw = 0.;
   for (int row = 0; row < in1.rows(); ++row) {
     for (int col = 0; col < in1.columns(); ++col) {
+      double d = 0.;
       for (int chan = 0; chan < in1.channels(); ++chan) {
         float v1 = min(max(in1.val(col, row, chan), 0.f), 255.f);
         float v2 = min(max(in2.val(col, row, chan), 0.f), 255.f);
-        double d = (v1 - v2) * (v1 - v2);
-        float m = mask.val(col, row);
-        double f, t;
-        if (m <= t1) {
-          f = 1.;
-          t = 0.;
-        } else if (m < t2) {
-          f = (t2 - m) / (t2 - t1);
-          t = (m - t1) / (t2 - t1);
-        } else {
-          f = 0.;
-          t = 1.;
-        }
-        flat.first += d * f;
-        flat.second += f;
-        texture.first += d * t;
-        texture.second += t;
-        mse += d;
+        d += (v1 - v2) * (v1 - v2);
       }
+      float m = min(max(mask.val(col, row), t1), t2);
+      double sc = (t2 - m) / (t2 - t1);
+      fsum += sc * d;
+      fw += sc;
+      tsum += (1 - sc) * d;
+      tw += (1 - sc);
     }
   }
-  return {sqrt(flat.first / flat.second),
-          sqrt(texture.first / texture.second),
-          sqrt(mse / in1.samples())};
+  fw *= in1.channels();
+  tw *= in1.channels();
+  double fmse = fsum / fw;
+  double tmse = tsum / tw;
+  double mse = (fsum + tsum) / (fw + tw);
+  return {fmse, tmse, mse};
 }
 
 int main(int argc, char** argv) {
-  bool usage = pick_option(&argc, argv, "h", nullptr);
-  float t1 = atof(pick_option(&argc, argv, "t1", "1"));
-  float t2 = atof(pick_option(&argc, argv, "t2", "2"));
+  bool usage = static_cast<bool>(pick_option(&argc, argv, "h", nullptr));
+  float t1 = static_cast<float>(atof(pick_option(&argc, argv, "t1", "1")));
+  float t2 = static_cast<float>(atof(pick_option(&argc, argv, "t2", "2")));
   if (usage || argc < 3) {
     cerr << "usage: " << argv[0] << " mask image1 [image2] [-t1 threshold] " <<
         "[-t2 threshold]" << endl;
@@ -90,11 +83,11 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  double frmse, trmse, rmse;
-  tie(frmse, trmse, rmse) = compute_ftrmse(mask, in1, in2, t1, t2);
-  double fpsnr = -20. * log10(frmse / 255.);
-  double tpsnr = -20. * log10(trmse / 255.);
-  double psnr = -20. * log10(rmse / 255.);
+  double fmse, tmse, mse;
+  tie(fmse, tmse, mse) = compute_ftmse(mask, in1, in2, t1, t2);
+  double fpsnr = -10. * log10(fmse / (255. * 255.));
+  double tpsnr = -10. * log10(tmse / (255. * 255.));
+  double psnr = -10. * log10(mse / (255. * 255.));
 
   cout << "fPSNR: " << fpsnr << endl;
   cout << "tPSNR: " << tpsnr << endl;
