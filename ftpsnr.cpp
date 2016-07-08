@@ -14,6 +14,7 @@ using std::cerr;
 using std::endl;
 using std::cout;
 using std::tuple;
+using std::make_tuple;
 using std::pair;
 using std::tie;
 using std::max;
@@ -47,7 +48,7 @@ tuple<double, double, double> compute_ftmse(const Image& mask,
   double fmse = fsum / fw;
   double tmse = tsum / tw;
   double mse = (fsum + tsum) / (fw + tw);
-  return {fmse, tmse, mse};
+  return make_tuple(fmse, tmse, mse);
 }
 
 int main(int argc, char** argv) {
