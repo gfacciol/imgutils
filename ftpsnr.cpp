@@ -23,9 +23,9 @@ using std::log10;
 
 // flat patches count "weight", while other patches count 1
 tuple<double, double, double> compute_ftmse(const Image& mask,
-                                             const Image& in1,
-                                             const Image& in2,
-                                             float t1, float t2) {
+                                            const Image& in1,
+                                            const Image& in2,
+                                            float t1, float t2) {
   double fsum = 0., fw = 0., tsum = 0., tw = 0.;
   for (int row = 0; row < in1.rows(); ++row) {
     for (int col = 0; col < in1.columns(); ++col) {

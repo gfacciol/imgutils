@@ -2,7 +2,6 @@
 
 from __future__ import division
 
-import numpy as np
 import piio
 import sys
 import os.path
