@@ -14,7 +14,6 @@ using namespace imgutils;
 using std::cerr;
 using std::endl;
 using std::cout;
-using std::isnan;
 using std::round;
 using std::max;
 using std::min;
@@ -324,8 +323,8 @@ int main(int argc, char** argv) {
   }
 
   Image mask = read_image(argc > 1 ? argv[1] : "-");
-  if (isnan(m)) m = *min_element(mask.begin(), mask.end());
-  if (isnan(M)) M = *max_element(mask.begin(), mask.end());
+  if (std::isnan(m)) m = *min_element(mask.begin(), mask.end());
+  if (std::isnan(M)) M = *max_element(mask.begin(), mask.end());
 
   if (mask.channels() != 1) {
     cerr << "The mask should have one channel." << endl;
