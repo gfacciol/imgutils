@@ -70,4 +70,32 @@ Image pad_symmetric(const Image &src, int padding) {
   return result;
 }
 
+bool isMonochrome (const Image &u) {
+  for (int row = 0; row < u.rows(); ++row) {
+    for (int col = 0; col < u.columns(); ++col) {
+      float v = u.val(col, row, 0);
+      for (int ch = 1; ch < u.channels(); ++ch) {
+        if (u.val(col, row, ch) != v)  {
+           return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+Image makeMonochrome (const Image &u) {
+  Image result(u.rows(), u.columns());
+  for (int row = 0; row < u.rows(); ++row) {
+    for (int col = 0; col < u.columns(); ++col) {
+      double v = 0;
+      for (int ch = 1; ch < u.channels(); ++ch) {
+        v += u.val(col, row, ch);
+      }
+      result.val(col,row) = v / u.channels();
+    }
+  }
+  return result;
+}
+
 }

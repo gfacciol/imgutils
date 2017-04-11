@@ -15,6 +15,9 @@ Image read_image(const std::string& filename);
 void save_image(const Image& image, const std::string& filename);
 
 Image pad_symmetric(const Image &src, int padding);
+
+bool isMonochrome (const Image &u);
+Image makeMonochrome (const Image &u);
 }
 
 #endif //IMGUTILS_UTILS_H

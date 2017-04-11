@@ -15,15 +15,15 @@ using std::endl;
 int main(int argc, char *argv[]) {
   bool usage = pick_option(&argc, argv, "h", nullptr);
   if (usage) {
-    cerr << "usage: " << argv[0] << " [input]" << endl;
+    cerr << "usage: " << argv[0] << " [[input] output]" << endl;
     return EXIT_SUCCESS;
   }
 
   string filename = argc > 1 ? argv[1] : "-";
+  string outfile  = argc > 2 ? argv[2] : "-";
 
   Image im = read_image(filename);
-  if (isMonochrome(im)) cout << 1 << endl;
-  else                            cout << 0 << endl;
+  save_image(makeMonochrome(im), outfile);
 
   return EXIT_SUCCESS;
 }
